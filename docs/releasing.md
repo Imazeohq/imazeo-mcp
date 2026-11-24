@@ -2,24 +2,24 @@
 
 Release from `Imazeohq/imazeo-mcp` with the npm package `@imazeo/mcp` and the MCP Registry name `com.imazeo/media`. Release steps require maintainer authorization.
 
-## Prepare and verify
+## Release a new version
 
-1. Update the version in `package.json`, `package-lock.json`, `server.json`, and the server identity in `src/server.ts`. Update the changelog and the pinned client launch examples.
-2. Run the CI checks described in [Contributing](../CONTRIBUTING.md). Verify any API contract changes against the deployed API and developer OpenAPI before the release.
-3. Wait for the CI matrix to pass. Create an annotated `vMAJOR.MINOR.PATCH` tag on the approved commit reachable from `origin/main`, then push that tag. For the first version, use:
+After the [first publication](#first-publication) and [trusted publisher setup](#trusted-publishing-for-subsequent-versions), start from a clean `main` with the changes you want to release committed and verified. Put any new changelog notes under `## Unreleased` before committing them.
 
-   ```sh
-   git tag -a v1.0.0 -m '@imazeo/mcp 1.0.0'
-   git push origin tag v1.0.0
-   ```
+```sh
+npm ci
+npm run release
+```
 
-Pushing the tag starts **Release MCP package**. It checks the tag, builds and tests the server, and uploads an `imazeo-mcp-vMAJOR.MINOR.PATCH` artifact containing the checked npm tarball and matching `server.json`. To prepare or recover those files independently, use **Actions → Release MCP package → Run workflow**, select the tag in the ref picker, and leave the publish checkbox clear.
+Choose `patch`, `minor`, `major`, or enter the exact next `X.Y.Z` version. The command updates both npm manifests, the MCP manifest, the server identity and pinned client examples. It labels any unreleased changelog notes, runs the local checks, then commits and pushes `main` and the new annotated tag together. You can also pass a version explicitly with `npm run release -- 1.0.1`.
+
+The tag starts **Release MCP package**. It builds and tests the server, uploads the checked npm tarball and matching `server.json`, and starts the protected npm publishing job. If Git rejects the push, the release command prints the exact retry command for the existing local tag and commit. To prepare just the release files, run the workflow manually on the tag with the publish checkbox clear.
 
 ## Publish to npm
 
 ### First publication
 
-npm requires an existing package before you can add a trusted publisher. Pushing `v1.0.0` prepares the artifact for this first publication. Download and extract it. From the directory containing the tarball, an authorized `@imazeo` maintainer can publish it with an interactive npm login and two-factor authentication. [npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
+npm requires an existing package before you can add a trusted publisher. Once the `v1.0.0` commit is reachable from `origin/main`, push the tag with `git push origin tag v1.0.0` to prepare the first artifact. Download and extract it. From the directory containing the tarball, an authorized `@imazeo` maintainer can publish it with an interactive npm login and two-factor authentication. [npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
 
 ```sh
 npm login --registry=https://registry.npmjs.org
@@ -28,7 +28,7 @@ npm publish ./imazeo-mcp-1.0.0.tgz --access public --ignore-scripts
 
 ### Trusted publishing for subsequent versions
 
-Enable private vulnerability reporting for the public repository. Configure the protected `npm` GitHub environment with required reviewers and deployment rules allowing only release tags. When the next version is ready, add the following trusted publisher in `@imazeo/mcp` package settings on npmjs.com. Complete its first successful publish within two days of creating the connection. [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/)
+Configure the `npm` GitHub environment with deployment rules allowing release tags. GitHub publishes automatically unless the environment has a reviewer or other approval gate. When the next version is ready, add the following trusted publisher in `@imazeo/mcp` package settings on npmjs.com. Complete its first successful publish within two days of creating the connection. [npm trusted publishing](https://docs.npmjs.com/trusted-publishers/)
 
 | npm setting | Value |
 | --- | --- |
@@ -39,7 +39,7 @@ Enable private vulnerability reporting for the public repository. Configure the 
 | Environment | `npm` |
 | Allowed action | Enable direct `npm publish` |
 
-Push the new version tag and approve the `npm` environment deployment. To retry publication for an existing tag, run **Release MCP package** manually with the publish checkbox selected. The publish job sends the checked tarball to npm with GitHub OIDC and provenance. Verify the version and `mcpName` on npm before submitting the registry listing.
+Run `npm run release` to start publishing. To retry publication for an existing tag, run **Release MCP package** manually with the publish checkbox selected. The publish job sends the checked tarball to npm with GitHub OIDC and provenance. Verify the version and `mcpName` on npm before submitting the registry listing.
 
 ```sh
 npm view @imazeo/mcp@1.0.0 version mcpName repository.url
