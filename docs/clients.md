@@ -1,6 +1,6 @@
 # Local MCP clients
 
-Use a supported Node.js version. The examples pin the npm release. For a source checkout, use `node` as the command and supply the absolute path to the built `dist/cli.js` as its only argument. If a Windows client cannot resolve `npx`, use `cmd.exe` with arguments `["/d", "/c", "npx", "--yes", "@imazeo/mcp@1.0.0"]`.
+Use a supported Node.js version. The examples pin the npm release. For a source checkout, use `node` as the command and supply the absolute path to the built `dist/cli.js` as its only argument. If a Windows client cannot resolve `npx`, use `cmd.exe` with arguments `["/d", "/c", "npx", "--yes", "@imazeo/mcp@1.0.1"]`.
 
 Add the optional `IMAZEO_INPUT_DIR` and `IMAZEO_OUTPUT_DIR` variables to the `env` object if you plan to upload or download files. Set each to the absolute path of a dedicated local directory. On Windows, escape backslashes in JSON or use forward slashes. Keep API keys and personal directory locations in private configuration.
 
@@ -14,7 +14,7 @@ Use the `mcpServers` object in `.cursor/mcp.json` or in the global MCP configura
     "imazeo": {
       "type": "stdio",
       "command": "npx",
-      "args": ["--yes", "@imazeo/mcp@1.0.0"],
+      "args": ["--yes", "@imazeo/mcp@1.0.1"],
       "env": {
         "IMAZEO_API_KEY": "${env:IMAZEO_API_KEY}"
       }
@@ -32,7 +32,7 @@ Open Settings, then Developer, then Edit Config. Replace the placeholder in your
   "mcpServers": {
     "imazeo": {
       "command": "npx",
-      "args": ["--yes", "@imazeo/mcp@1.0.0"],
+      "args": ["--yes", "@imazeo/mcp@1.0.1"],
       "env": {
         "IMAZEO_API_KEY": "<project-api-key>"
       }
@@ -51,7 +51,7 @@ Use `.mcp.json` for a project-scoped server. Claude Code expands the API key fro
     "imazeo": {
       "type": "stdio",
       "command": "npx",
-      "args": ["--yes", "@imazeo/mcp@1.0.0"],
+      "args": ["--yes", "@imazeo/mcp@1.0.1"],
       "env": {
         "IMAZEO_API_KEY": "${IMAZEO_API_KEY}"
       }
@@ -78,7 +78,7 @@ Use the native MCP configuration in `.vscode/mcp.json` or open the user configur
     "imazeo": {
       "type": "stdio",
       "command": "npx",
-      "args": ["--yes", "@imazeo/mcp@1.0.0"],
+      "args": ["--yes", "@imazeo/mcp@1.0.1"],
       "env": {
         "IMAZEO_API_KEY": "${input:imazeo-api-key}"
       }

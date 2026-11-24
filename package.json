@@ -1,6 +1,6 @@
 {
   "name": "@imazeo/mcp",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Official Imazeo stdio MCP server for images, PDFs, document rendering, website capture, QR codes, and barcodes",
   "type": "module",
   "license": "MIT",

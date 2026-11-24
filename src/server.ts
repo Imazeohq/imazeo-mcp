@@ -8,7 +8,7 @@ import type { LocalFiles } from './files.js';
 import { registerMedia } from './tools/media.js';
 import { registerProject } from './tools/project.js';
 
-export const identity = { name: 'com.imazeo/media', title: 'Imazeo Media', version: '1.0.0' };
+export const identity = { name: 'com.imazeo/media', title: 'Imazeo Media', version: '1.0.1' };
 
 export type Effect = 'read' | 'download' | 'idempotent' | 'create' | 'destructive';
 const annotations: Record<Effect, ToolAnnotations> = {
