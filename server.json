@@ -1,0 +1,38 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "com.imazeo/media",
+  "title": "Imazeo Media",
+  "description": "Process images, PDFs, documents, website captures, QR codes, and barcodes with Imazeo.",
+  "repository": {
+    "url": "https://github.com/Imazeohq/imazeo-mcp",
+    "source": "github"
+  },
+  "version": "1.0.0",
+  "websiteUrl": "https://imazeo.com/docs/",
+  "packages": [
+    {
+      "registryType": "npm",
+      "registryBaseUrl": "https://registry.npmjs.org",
+      "identifier": "@imazeo/mcp",
+      "version": "1.0.0",
+      "runtimeHint": "npx",
+      "transport": { "type": "stdio" },
+      "environmentVariables": [
+        {
+          "name": "IMAZEO_API_KEY",
+          "description": "Secret API key for the Imazeo project used by this server.",
+          "isRequired": true,
+          "isSecret": true
+        },
+        {
+          "name": "IMAZEO_INPUT_DIR",
+          "description": "Optional absolute directory containing local files you allow the server to upload."
+        },
+        {
+          "name": "IMAZEO_OUTPUT_DIR",
+          "description": "Optional absolute directory where the server may write new media files."
+        }
+      ]
+    }
+  ]
+}

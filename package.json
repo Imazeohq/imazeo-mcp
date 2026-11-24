@@ -1,0 +1,40 @@
+{
+  "name": "@imazeo/mcp",
+  "version": "1.0.0",
+  "description": "Official Imazeo stdio MCP server for images, PDFs, document rendering, website capture, QR codes, and barcodes",
+  "type": "module",
+  "license": "MIT",
+  "author": "Imazeo",
+  "bin": { "imazeo-mcp": "dist/cli.js" },
+  "mcpName": "com.imazeo/media",
+  "files": ["dist", "docs", "server.json", "CHANGELOG.md", "SECURITY.md", "CONTRIBUTING.md"],
+  "engines": { "node": "^22.19.0 || ^24.0.0 || ^26.0.0" },
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "eslint .",
+    "test": "npm run build && node --test test/*.test.mjs",
+    "check:package": "node scripts/check-package.mjs",
+    "check:registry": "node scripts/check-registry.mjs",
+    "prepack": "npm run build"
+  },
+  "keywords": ["mcp", "model-context-protocol", "imazeo", "image-processing", "pdf", "document-rendering", "website-screenshot", "qr-code", "barcode"],
+  "repository": { "type": "git", "url": "git+https://github.com/Imazeohq/imazeo-mcp.git" },
+  "bugs": { "url": "https://github.com/Imazeohq/imazeo-mcp/issues" },
+  "homepage": "https://imazeo.com/docs/",
+  "publishConfig": { "access": "public" },
+  "dependencies": {
+    "@imazeo/sdk": "1.1.1",
+    "@modelcontextprotocol/server": "2.4.0",
+    "zod": "^4.1.13"
+  },
+  "devDependencies": {
+    "@modelcontextprotocol/client": "2.4.0",
+    "@types/node": "^22.19.0",
+    "ajv": "^8.17.1",
+    "ajv-formats": "^3.0.1",
+    "eslint": "^10.0.0",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.48.0"
+  }
+}
