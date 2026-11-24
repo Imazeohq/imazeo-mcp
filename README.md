@@ -9,7 +9,7 @@ The official Imazeo MCP server connects local AI clients to an Imazeo project ov
 Use Node.js 22.19 or later in the 22.x line, 24.x, or 26.x. Get an Imazeo project API key from the [customer portal](https://app.imazeo.com/). After the npm release, configure your MCP client to run the following command.
 
 ~~~sh
-npx --yes @imazeo/mcp@1.0.1
+npx --yes @imazeo/mcp@1.0.2
 ~~~
 
 For a source checkout, run `npm ci` and `npm run build`. Configure the client to run `node` with the absolute path to `dist/cli.js`.
