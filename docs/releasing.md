@@ -4,27 +4,32 @@ Release from `Imazeohq/imazeo-mcp` with the npm package `@imazeo/mcp` and the MC
 
 ## Release a new version
 
-After the [first publication](#first-publication) and [trusted publisher setup](#trusted-publishing-for-subsequent-versions), start from a clean `main` with the changes you want to release committed and verified. Put any new changelog notes under `## Unreleased` before committing them.
+After the [first publication](#first-publication) and [trusted publisher setup](#trusted-publishing-for-subsequent-versions), merge the changes you want to release into `main`. Put any changelog notes under `## Unreleased` before merging them.
+
+1. Open **Actions → Create MCP release → Run workflow** and select `main`.
+2. Choose `patch` for a fix, `minor` for a compatible feature, or `major` for a breaking release. Leave the confirmation checkbox clear to see the exact next tag in the run summary.
+3. Run the workflow again with the same choice and check confirmation to release. GitHub checks the chosen version against npm and existing Git tags, then tests and pushes the release commit and its annotated tag together. Resolve an unpublished current tag before starting a new release.
+
+GitHub dispatches **Release MCP package** on the new tag. That run publishes to npm through OIDC and creates a GitHub Release with the checked tarball and `server.json`. The workflow uses `GITHUB_TOKEN` to push `main` and the tag, so GitHub rules for those refs must permit the release write.
+
+To open the workflow in your browser from a terminal, sign in to the GitHub CLI and run the following from this repository.
 
 ```sh
-npm ci
 npm run release
 ```
-
-Choose `patch`, `minor`, `major`, or enter the exact next `X.Y.Z` version. The command updates both npm manifests, the MCP manifest, the server identity and pinned client examples. It labels any unreleased changelog notes, runs the local checks, then commits and pushes `main` and the new annotated tag together. You can also pass a version explicitly with `npm run release -- 1.0.1`.
-
-The tag starts **Release MCP package**. It builds and tests the server, uploads the checked npm tarball and matching `server.json`, and starts the protected npm publishing job. If Git rejects the push, the release command prints the exact retry command for the existing local tag and commit. To prepare just the release files, run the workflow manually on the tag with the publish checkbox clear.
 
 ## Publish to npm
 
 ### First publication
 
-npm requires an existing package before you can add a trusted publisher. Once the `v1.0.0` commit is reachable from `origin/main`, push the tag with `git push origin tag v1.0.0` to prepare the first artifact. Download and extract it. From the directory containing the tarball, an authorized `@imazeo` maintainer can publish it with an interactive npm login and two-factor authentication. [npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
+npm requires an existing package before you can add a trusted publisher. A publish log can show signed provenance before npm rejects the upload with `E404`. If `@imazeo/mcp` is still absent, download and extract the `imazeo-mcp-v1.0.1` artifact from the existing `v1.0.1` workflow run. If the artifact expired, run **Release MCP package** on that tag with publication unchecked to regenerate it. From the directory containing the tarball, an authorized `@imazeo` maintainer can publish it with an interactive npm login and two-factor authentication. [v1.0.1 workflow run](https://github.com/Imazeohq/imazeo-mcp/actions/runs/45367185621) · [npm trust prerequisites](https://docs.npmjs.com/cli/v11/commands/npm-trust/)
 
 ```sh
 npm login --registry=https://registry.npmjs.org
-npm publish ./imazeo-mcp-1.0.0.tgz --access public --ignore-scripts
+npm publish ./imazeo-mcp-1.0.1.tgz --access public --ignore-scripts
 ```
+
+If you need to select the existing tag from a terminal, run `gh workflow run publish.yml --repo Imazeohq/imazeo-mcp --ref v1.0.1 -f publish=false`.
 
 ### Trusted publishing for subsequent versions
 
@@ -39,17 +44,27 @@ Configure the `npm` GitHub environment with deployment rules allowing release ta
 | Environment | `npm` |
 | Allowed action | Enable direct `npm publish` |
 
-Run `npm run release` to start publishing. To retry publication for an existing tag, run **Release MCP package** manually with the publish checkbox selected. The publish job sends the checked tarball to npm with GitHub OIDC and provenance. Verify the version and `mcpName` on npm before submitting the registry listing.
+If publication still returns `E404` once the package is public, verify the exact spelling of these settings, the direct publish permission, and whether the trusted publisher configuration has expired.
+
+### Retry an existing tag
+
+When a later release fails before npm accepts it, fix the underlying issue and rerun the failed job for that tag. You can also run **Release MCP package** manually on the same tag and check its publish option. The GitHub CLI supports an exact tag ref if needed.
 
 ```sh
-npm view @imazeo/mcp@1.0.0 version mcpName repository.url
+gh workflow run publish.yml --repo Imazeohq/imazeo-mcp --ref v1.0.2 -f publish=true
 ```
 
-Replace `1.0.0` with the version you published.
+Verify the published version and `mcpName` before submitting the registry listing.
+
+```sh
+npm view @imazeo/mcp@1.0.1 version mcpName repository.url
+```
+
+Use the version you published in this command.
 
 ## Publish to the MCP Registry
 
-Publish the matching npm version first. Use `server.json` from the same workflow artifact. The Registry checks the versioned npm manifest's `mcpName` against the server name in `server.json`. The artifact's manifest passes `npm run check:registry` during preparation.
+Publish the matching npm version first. Use `server.json` from the same GitHub Release or workflow artifact. The Registry checks the versioned npm manifest's `mcpName` against the server name in `server.json`. The artifact's manifest passes `npm run check:registry` during preparation.
 
 Authenticate with domain verification for `imazeo.com`. With DNS verification configured, run the following from the extracted artifact directory. The key file holds the hex signing key and belongs outside the checkout. The Registry also supports HTTP verification for this namespace. [MCP Registry authentication](https://github.com/modelcontextprotocol/registry/blob/main/docs/modelcontextprotocol-io/authentication.mdx) [Publisher commands](https://github.com/modelcontextprotocol/registry/blob/main/docs/reference/cli/commands.md)
 
