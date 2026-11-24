@@ -22,7 +22,7 @@
   "repository": { "type": "git", "url": "git+https://github.com/Imazeohq/imazeo-mcp.git" },
   "bugs": { "url": "https://github.com/Imazeohq/imazeo-mcp/issues" },
   "homepage": "https://imazeo.com/docs/",
-  "publishConfig": { "access": "public" },
+  "publishConfig": { "access": "public", "registry": "https://registry.npmjs.org" },
   "dependencies": {
     "@imazeo/sdk": "1.1.1",
     "@modelcontextprotocol/server": "2.4.0",
